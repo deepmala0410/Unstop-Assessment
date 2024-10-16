@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/trainCoach/coachs');
+        const response = await axios.get('http://15.206.90.205:3002/trainCoach/coachs');
         const { data } = response;
         if (data && data.length > 0) {
           updateCoachSeats(data);
@@ -36,7 +36,7 @@ function App() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/trainCoach/reserve', { numberOfSeats: parseInt(numSeats) });
+      const response = await axios.post('http://15.206.90.205:3002/trainCoach/reserve', { numberOfSeats: parseInt(numSeats) });
       const { data } = response;
       console.log(response)
 
