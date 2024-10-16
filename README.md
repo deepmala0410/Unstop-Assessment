@@ -32,6 +32,7 @@ Install the required packages in both directory
 ```
 npm install
 ```
+Update .env file in assessment-unstop-backend and fill the password or other deatils as required
 Run the frontend 
 ```
 npm start
