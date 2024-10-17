@@ -83,7 +83,7 @@ function App() {
       if(seat.BookingStatus)
       newCoachSeats[row][col] = 1;
       else
-      newCoachSeats[row][col] = 1;
+      newCoachSeats[row][col] = 0;
     });
     setCoachSeats(newCoachSeats);
   };
