@@ -45,10 +45,18 @@ const searchNearbyAvailable = async (numberOfSeats) => {
     return result;
 };
 
+const emptyCoach = async () => {
+    const [result] = await db.query(
+        `update Coaches set BookingStatus=0;`
+    );
+    return result;
+};
+
 // Export the functions to use in other parts of the application
 module.exports = {
     getAvailableSeats,
     reserveSeats,
     groupSeatsByRow,
-    searchNearbyAvailable
+    searchNearbyAvailable,
+    emptyCoach
 };

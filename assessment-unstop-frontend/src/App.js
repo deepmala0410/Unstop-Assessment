@@ -10,23 +10,23 @@ function App() {
 
   // UseEffect to fetch seat data
   useEffect(() => {
-    const fetchSeats = async () => {
-      try {
-        const response = await axios.get('http://15.206.90.205:3002/trainCoach/coachs');
-        const { data } = response;
-        if (data && data.length > 0) {
-          updateCoachSeats(data);
-          setError('');
-        } else {
-          setError('Error occurred while fetching seats.');
-        }
-      } catch (err) {
-        setError('Failed to fetch seat data');
-      }
-    };
-
     fetchSeats();
   }, []); // We don't need to include `reservedSeats` here as a dependency
+
+  const fetchSeats = async () => {
+    try {
+      const response = await axios.get('http://13.235.68.225:3002/trainCoach/coachs');
+      const { data } = response;
+      if (data && data.length > 0) {
+        updateCoachSeats(data);
+        setError('');
+      } else {
+        setError('Error occurred while fetching seats.');
+      }
+    } catch (err) {
+      setError('Failed to fetch seat data');
+    }
+  };
 
   // Function to handle seat reservation
   const handleReserveSeats = async () => {
@@ -34,51 +34,58 @@ function App() {
       setError('Please enter a number between 1 and 7.');
       return;
     }
-
     try {
-      const response = await axios.post('http://15.206.90.205:3002/trainCoach/reserve', { numberOfSeats: parseInt(numSeats) });
+      const response = await axios.post('http://13.235.68.225:3002/trainCoach/reserve', { numberOfSeats: parseInt(numSeats) });
       const { data } = response;
-      console.log(response)
-
       if (data && data.data.length > 0) {
         setReservedSeats(data.data);
         updateCoachPostReservation(data.data);
         setError('');
       } else {
-        console.log(data)
         setError('No available seats or some error occurred.');
       }
-      console.log(reservedSeats)
     } catch (err) {
-      console.log(err)
       setError(err.response.data.message || 'Error reserving seats');
+    }
+  };
+
+  const handleEmptySeats = async () => {
+    try {
+      const response = await axios.put('http://13.235.68.225:3002/trainCoach/emptyCoach',{});
+      const { data } = response;
+      if (data && data.data) {
+        await fetchSeats()
+        setError(data.message);
+      } else {
+        setError('Error occurred while doing empty seats.');
+      }
+    } catch (err) {
+      setError('Failed to update seat data');
     }
   };
 
   // Update seat status in the coach
   const updateCoachPostReservation = (seats) => {
     const newCoachSeats = [...coachSeats];
-    console.log(seats)
     seats.forEach((seat, index) => {
       const row = seat.RowNumber;
       const col = seat.SeatNumber;
       newCoachSeats[row][col] = 1;
     });
     setCoachSeats(newCoachSeats);
-    console.log(coachSeats)
   };
 
   const updateCoachSeats = (seats) => {
     const newCoachSeats = [...coachSeats];
-    console.log(seats)
     seats.forEach((seat, index) => {
       const row = seat.RowNumber;
       const col = seat.SeatNumber;
       if(seat.BookingStatus)
       newCoachSeats[row][col] = 1;
+      else
+      newCoachSeats[row][col] = 1;
     });
     setCoachSeats(newCoachSeats);
-    console.log(coachSeats)
   };
 
   // Function to render the seat layout
@@ -109,7 +116,8 @@ function App() {
           value={numSeats}
           onChange={(e) => setNumSeats(e.target.value)}
         />
-        <button onClick={handleReserveSeats}>Reserve Seats</button>
+        <button style={{padding:"5px",backgroundColor:'lavender', color:'black', margin:'5px', borderRadius:'5px'}} onClick={handleReserveSeats}>Reserve Seats</button>
+        <button style={{padding:"5px",backgroundColor:"lightcyan", color:'black', margin:'5px', borderRadius:'5px'}} onClick={handleEmptySeats}>Reset Seats</button>
         {error && <p className="error">{error}</p>}
       </div>
 

@@ -14,6 +14,16 @@ router.get('/coachs', async (req, res) => {
   }
 });
 
+//Empty the coach
+router.put('/emptyCoach', async (req, res) => {
+  try {
+      let result=await seats.emptyCoach();
+      res.json({message:'Coach is empty' , data: result});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // API to fill the coach database with 80 seat entries
 router.post('/coach', async (req, res) => {
   try {
